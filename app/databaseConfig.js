@@ -5,7 +5,7 @@ const {serverErrorResponse} = require("./helper/errorResponse")
 const data = process.env;
 const databaseConfig =(res)=>{
 
-    mysql.createConnection({
+   connection = mysql.createConnection({
         host:data.host,
         user:data.user,
         password:data.password,
@@ -16,7 +16,9 @@ const databaseConfig =(res)=>{
         if(error){
             serverErrorResponse(res);
         }
+
     })
+    return connection;
 } 
 
-export default databaseConfig;
+module.exports= databaseConfig;
