@@ -1,9 +1,10 @@
 const { serverErrorResponse } = require("../helper/errorResponse")
+const { sendMail } = require("../helper/sendMessage")
 const model = require("../model/post")
 
 /* 
      this function call add post modal with callback function the error is true call serverErrorResponse
-     otherwise send response with added post id
+     otherwise call other user contact modal if its return err send server error response other wise send mail
 */
 exports.addPost=(req,res)=>{
     //console.log(req);
@@ -24,11 +25,37 @@ exports.addPost=(req,res)=>{
                 })
             }
             else{
-                res.status(200).json({
-                    message: "your post was successfully posted",
-                   // post_id:data.id
-                   email:data
-                })
+                model.otherUserContact(req.body.authorId,
+                    (err,otherUserContactData)=>{
+                        if(err){
+                            serverErrorResponse(res)
+                        }
+                        else{
+                            const sendData={
+                                email:otherUserContactData,
+                                subject:"New post was added",
+                                text: `${data[0].name} add new post`,
+                                html: `<table style="background-color:black; color: white;" width="100%"><tbody><tr><td>Title</td><td>${req.body.title}</td></tr><tr> <td>description</td>${req.body.description}<td></td></tr><tr> <td>Author</td><td>${data[0].name}</td></tr><tbody><table>`
+                            }
+                            sendMail(sendData,
+                                err=>{
+                                    
+                                    if(err!=null){
+                                        console.log("sanjai")
+                                        res.status(200).json({
+                                            message: "your post was successfully posted but error in send notification"
+                                        })
+                                    }else if(err==null){
+                                        res.status(200).json({
+                                            message: "your post was successfully posted"
+                                        })
+                                    }
+                                }
+                            )
+                        }
+                    })
+                
+                
             }
         }
     )

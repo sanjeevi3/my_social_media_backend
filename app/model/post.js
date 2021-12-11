@@ -83,3 +83,19 @@ exports.getPosts = (authorId, callback) => {
         callback(error);
     }
 }
+exports.otherUserContact = (authorId, callback) => {
+    try {
+        databaseConfig().query("CALL other_user_contact(?)",
+        authorId,
+            (err, res) => {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, res[0]);
+                }
+            }
+        );
+    } catch (error) {
+        callback(error);
+    }
+}
