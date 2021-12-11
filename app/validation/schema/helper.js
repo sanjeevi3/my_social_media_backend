@@ -10,19 +10,11 @@ exports.text=(field,min,max)=>{
         "string.max":`maximum length is ${max}.`
     })
     }
-    exports.required=(field)=>{
-        return joy.string().required().empty().messages({
-            "any.required" :`Enter the ${field}.`,
-            "string.empty"  :`${field} is required.`,
-            "string.base":`${field} is must be string`
-        })
-    }
-    exports.email=()=>{
-        const field="email"
-        return joy.string().required().empty().email().messages({
-            "any.required" :`Enter the ${field}.`,
-            "string.empty"  :`${field} is required.`,
-            "string.base":`${field} is must be string`,
-            "string.email":`enter valid ${field}`
-        })
-        } 
+        exports.number=(field,min,max)=>{
+            return joy.number().required().empty().min(min).messages({
+                "any.required" :`Enter the ${field}.`,
+                "number.empty"  :`${field} is required.`,
+                "number.base":`${field} is must be number`,
+                "string.minLength":`minimum length is ${ min}.`
+            })
+        }
